@@ -1,89 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0A0D14"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SPYDY REMINDER"
-        android:textColor="#E62429"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Android Edition — Spider-Man Reminders"
-        android:textColor="#94A3B8"
-        android:textSize="14sp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="REMINDER MESSAGE"
-        android:textColor="#F0F4F8"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/etMessage"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#161B26"
-        android:textColor="#FFFFFF"
-        android:padding="14dp"
-        android:hint="Time to drink water! 💧"
-        android:textColorHint="#64748B"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="20dp" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CUSTOM DELAY (MINUTES)"
-        android:textColor="#F0F4F8"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="SPYDY REMINDER"
+            android:textColor="#E62429"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/etMinutes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#161B26"
-        android:textColor="#FFFFFF"
-        android:padding="14dp"
-        android:inputType="numberDecimal"
-        android:text="10"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:text="Spider-Man Phone Edition 🕷️"
+            android:textColor="#94A3B8"
+            android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/btnSetCustom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SET REMINDER"
-        android:backgroundTint="#00D2FF"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:padding="14dp" />
+        <!-- SENDER NAME -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REMINDER FROM (KISKA REMINDER HAIN)"
+            android:textColor="#F0F4F8"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btnTestDrop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="🕷️ TEST DROP OVERLAY NOW"
-        android:backgroundTint="#E62429"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:padding="14dp"
-        android:layout_marginTop="16dp" />
+        <EditText
+            android:id="@+id/etSender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="#161B26"
+            android:hint="e.g. Mom, Boss, Friend, Me"
+            android:inputType="textPersonName"
+            android:padding="14dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#64748B" />
 
-</LinearLayout>
+        <!-- MESSAGE -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REMINDER MESSAGE (KYA SET KIYA)"
+            android:textColor="#F0F4F8"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="#161B26"
+            android:hint="e.g. Call back, Drink Water, Take Medicine"
+            android:inputType="textMultiLine"
+            android:padding="14dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#64748B" />
+
+        <!-- DELAY -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CUSTOM DELAY (MINUTES)"
+            android:textColor="#F0F4F8"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etMinutes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="20dp"
+            android:background="#161B26"
+            android:inputType="numberDecimal"
+            android:padding="14dp"
+            android:text="10"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnSetCustom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00D2FF"
+            android:padding="14dp"
+            android:text="SET REMINDER"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnTestDrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#E62429"
+            android:padding="14dp"
+            android:text="🕷️ TEST DROP OVERLAY &amp; SOUND NOW"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <!-- ACTIVE REMINDERS SECTION -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="12dp"
+            android:text="📋 SCHEDULED / ACTIVE REMINDERS"
+            android:textColor="#00D2FF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/containerActiveReminders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+</ScrollView>
