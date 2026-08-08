@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' file: data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>Spydy Overlay</title>
+  <link rel="stylesheet" href="overlay.css" />
+</head>
+<body>
+  <div id="webLine"></div>
+
+  <img id="spidey" src="../assets/spiderman.png" alt="" />
+
+  <div id="bubble">
+    <div class="bubble-header">
+      <span>🕷️ SPYDY REMINDER</span>
+      <span id="bubbleTime"></span>
+    </div>
+    <div id="bubbleMessage"></div>
+    <div class="bubble-dismiss">Press ESC or click anywhere to dismiss</div>
+  </div>
+
+  <script src="audio.js"></script>
+  <script src="overlay.js"></script>
+</body>
+</html>

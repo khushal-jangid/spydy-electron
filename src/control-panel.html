@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' file: data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>Spydy Reminder</title>
+  <link rel="stylesheet" href="control-panel.css" />
+</head>
+<body>
+  <div class="header">
+    <img class="logo" src="../assets/logo.png" alt="Spydy" />
+    <div class="title-box">
+      <h1>SPYDY REMINDER</h1>
+      <p>Windows Edition — Satisfying reminders with every drop</p>
+    </div>
+  </div>
+
+  <div class="content">
+    <section>
+      <label class="section-label">REMINDER MESSAGE</label>
+      <input id="msgInput" type="text" value="Time to drink water! 💧" />
+      <div class="preset-row" id="presetRow"></div>
+    </section>
+
+    <section>
+      <label class="section-label">SCHEDULE TIME</label>
+      <div class="quick-row" id="quickRow"></div>
+
+      <div class="custom-row">
+        <span>Custom Delay (Minutes):</span>
+        <input id="customMin" type="number" min="0.1" step="0.1" value="10" />
+        <button id="setCustomBtn" class="btn-blue">Set Custom</button>
+      </div>
+    </section>
+
+    <button id="testDropBtn" class="btn-test">🕷️ TEST DROP ANIMATION NOW</button>
+
+    <section class="reminders-section">
+      <label class="section-label">ACTIVE SCHEDULED REMINDERS</label>
+      <div id="remList" class="rem-list">
+        <p class="empty-state">No active reminders scheduled.</p>
+      </div>
+    </section>
+  </div>
+
+  <script src="audio.js"></script>
+  <script src="control-panel.js"></script>
+</body>
+</html>
