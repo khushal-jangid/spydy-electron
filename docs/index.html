@@ -15,11 +15,12 @@
     <style>
         :root {
             --primary: #E62429;
-            --primary-glow: rgba(230, 36, 41, 0.4);
+            --primary-glow: rgba(230, 36, 41, 0.5);
             --secondary: #00D2FF;
+            --secondary-glow: rgba(0, 210, 255, 0.4);
             --bg-dark: #0A0D14;
-            --card-bg: rgba(22, 27, 38, 0.7);
-            --card-border: rgba(230, 36, 41, 0.25);
+            --card-bg: rgba(22, 27, 38, 0.75);
+            --card-border: rgba(230, 36, 41, 0.3);
             --text-main: #F0F4F8;
             --text-muted: #94A3B8;
         }
@@ -35,10 +36,19 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(230, 36, 41, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 210, 255, 0.1) 0%, transparent 40%);
             min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated Interactive Canvas */
+        #webCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* Header & Nav */
@@ -47,13 +57,14 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 8%;
-            backdrop-filter: blur(12px);
-            background: rgba(10, 13, 20, 0.8);
+            backdrop-filter: blur(16px);
+            background: rgba(10, 13, 20, 0.85);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(230, 36, 41, 0.2);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
         }
 
         .logo-box {
@@ -65,24 +76,32 @@
         }
 
         .logo-box img {
-            width: 40px;
-            height: 40px;
-            filter: drop-shadow(0 0 8px var(--primary-glow));
+            width: 42px;
+            height: 42px;
+            filter: drop-shadow(0 0 10px var(--primary-glow));
+            animation: pulseLogo 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseLogo {
+            0% { transform: scale(1); filter: drop-shadow(0 0 8px var(--primary-glow)); }
+            100% { transform: scale(1.08); filter: drop-shadow(0 0 16px var(--secondary-glow)); }
         }
 
         .logo-box span {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.4rem;
+            font-size: 1.45rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #FFF, var(--primary));
+            background: linear-gradient(135deg, #FFF 30%, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
         }
 
         nav ul {
             display: flex;
             list-style: none;
             gap: 28px;
+            align-items: center;
         }
 
         nav a {
@@ -90,6 +109,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s;
+            position: relative;
         }
 
         nav a:hover {
@@ -99,315 +119,474 @@
         .nav-btn {
             background: linear-gradient(135deg, var(--primary), #B31217);
             color: white !important;
-            padding: 10px 22px;
+            padding: 10px 24px;
             border-radius: 30px;
-            box-shadow: 0 4px 15px var(--primary-glow);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 18px var(--primary-glow);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .nav-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(230, 36, 41, 0.6);
+            transform: scale(1.06) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230, 36, 41, 0.7);
         }
 
         /* Hero Section */
         .hero {
-            padding: 160px 8% 80px;
+            padding: 170px 8% 80px;
             display: grid;
             grid-template-columns: 1.2fr 1fr;
             align-items: center;
             gap: 40px;
+            position: relative;
+        }
+
+        /* Hanging Swinging Spider Mascot */
+        .swinging-spidey {
+            position: absolute;
+            top: 80px;
+            right: 5%;
+            z-index: 10;
+            transform-origin: top center;
+            animation: webSwing 4.5s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .swinging-thread {
+            width: 2px;
+            height: 120px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8));
+            box-shadow: 0 0 6px #FFF;
+            margin: 0 auto;
+        }
+
+        .swinging-img {
+            width: 95px;
+            filter: drop-shadow(0 10px 20px rgba(230, 36, 41, 0.5));
+            transform: scaleY(-1); /* Upside down hanging position */
+        }
+
+        @keyframes webSwing {
+            0% { transform: rotate(-12deg); }
+            50% { transform: rotate(12deg); }
+            100% { transform: rotate(-8deg); }
         }
 
         .hero-content h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 3.4rem;
+            font-size: 3.5rem;
             line-height: 1.15;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             font-weight: 700;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s forwards 0.2s;
         }
 
         .hero-content h1 span {
             background: linear-gradient(135deg, #FF4D4D, var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
         }
 
         .hero-content p {
-            font-size: 1.15rem;
+            font-size: 1.18rem;
             color: var(--text-muted);
-            margin-bottom: 35px;
-            line-height: 1.6;
-            max-width: 540px;
+            margin-bottom: 38px;
+            line-height: 1.65;
+            max-width: 550px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s forwards 0.4s;
         }
 
         .hero-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 18px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s forwards 0.6s;
         }
 
         .btn-primary {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             background: linear-gradient(135deg, var(--primary), #990B0F);
             color: #FFF;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-weight: 700;
             text-decoration: none;
-            box-shadow: 0 8px 25px var(--primary-glow);
-            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            box-shadow: 0 10px 30px var(--primary-glow);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+            transform: scale(0);
+            transition: transform 0.5s ease-out;
+        }
+
+        .btn-primary:hover::before {
+            transform: scale(1);
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(230, 36, 41, 0.6);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(230, 36, 41, 0.7);
         }
 
         .btn-secondary {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             color: var(--text-main);
-            padding: 14px 28px;
-            border-radius: 12px;
+            padding: 16px 30px;
+            border-radius: 14px;
             font-weight: 600;
             text-decoration: none;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             transition: all 0.3s ease;
         }
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.12);
             border-color: var(--secondary);
-            transform: translateY(-3px);
+            color: var(--secondary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 210, 255, 0.2);
         }
 
         .hero-image-container {
             position: relative;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: fadeInZoom 1s forwards 0.5s;
         }
 
         .hero-image {
             width: 100%;
-            border-radius: 16px;
+            border-radius: 20px;
             border: 1px solid var(--card-border);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(230, 36, 41, 0.2);
-            transition: transform 0.4s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(230, 36, 41, 0.25);
+            transition: all 0.5s ease;
         }
 
-        .hero-image:hover {
-            transform: scale(1.02);
+        .hero-image-container:hover .hero-image {
+            transform: scale(1.03) rotate(0.5deg);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(0, 210, 255, 0.4);
         }
 
-        /* Live Interactive Web Demo */
+        /* Live Interactive Web Demo Stage */
         .demo-section {
-            padding: 80px 8%;
+            padding: 90px 8%;
             text-align: center;
         }
 
         .section-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             margin-bottom: 12px;
+            background: linear-gradient(135deg, #FFF, #CBD5E1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .section-subtitle {
             color: var(--text-muted);
-            margin-bottom: 40px;
-            font-size: 1.05rem;
+            margin-bottom: 45px;
+            font-size: 1.1rem;
         }
 
         .demo-stage {
             position: relative;
-            max-width: 900px;
-            height: 420px;
+            max-width: 920px;
+            height: 450px;
             margin: 0 auto;
-            background: #10141E;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: radial-gradient(circle at center, #151A28 0%, #0D101A 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(230, 36, 41, 0.3);
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9), 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Web Shooter Rays */
+        .web-ray {
+            position: absolute;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            width: 2px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .spider-overlay {
             position: absolute;
-            top: -300px;
+            top: -380px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 10;
+            transition: top 0.75s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 20;
         }
 
         .spider-overlay.active {
-            top: 20px;
+            top: 25px;
         }
 
         .web-line {
             width: 3px;
-            height: 140px;
+            height: 150px;
             background: linear-gradient(to bottom, rgba(255,255,255,0.2), #FFFFFF);
-            box-shadow: 0 0 8px #FFF;
+            box-shadow: 0 0 12px #FFF, 0 0 20px var(--secondary);
         }
 
         .spider-img {
-            width: 130px;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.7));
+            width: 140px;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8));
+            animation: spiderFidget 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes spiderFidget {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(-2deg); }
+            100% { transform: translateY(4px) rotate(2deg); }
         }
 
         .speech-bubble {
-            background: rgba(22, 27, 38, 0.95);
+            background: rgba(18, 24, 38, 0.96);
             border: 2px solid var(--primary);
-            padding: 16px 24px;
-            border-radius: 16px;
-            margin-top: 10px;
-            box-shadow: 0 10px 30px rgba(230, 36, 41, 0.3);
-            max-width: 320px;
-            animation: pulseGlow 2s infinite alternate;
+            padding: 18px 28px;
+            border-radius: 20px;
+            margin-top: 12px;
+            box-shadow: 0 15px 40px rgba(230, 36, 41, 0.4), 0 0 20px rgba(0, 210, 255, 0.2);
+            max-width: 340px;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
         }
 
-        @keyframes pulseGlow {
-            from { box-shadow: 0 10px 25px rgba(230, 36, 41, 0.2); }
-            to { box-shadow: 0 10px 35px rgba(230, 36, 41, 0.5); }
+        .spider-overlay.active .speech-bubble {
+            transform: scale(1);
+            opacity: 1;
         }
 
         /* Features Section */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            padding: 40px 8% 80px;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 28px;
+            padding: 40px 8% 90px;
         }
 
         .feature-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            padding: 30px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s, border-color 0.3s;
+            padding: 35px 28px;
+            border-radius: 20px;
+            backdrop-filter: blur(14px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
+            transform: translateY(-8px);
+            border-color: rgba(230, 36, 41, 0.6);
+            box-shadow: 0 15px 35px rgba(230, 36, 41, 0.25);
         }
 
         .feature-icon {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             color: var(--primary);
-            margin-bottom: 18px;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.15) rotate(5deg);
+            color: var(--secondary);
         }
 
         .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+            font-weight: 700;
         }
 
         .feature-card p {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-size: 0.98rem;
+            line-height: 1.6;
         }
 
         /* Downloads Grid */
         .download-section {
-            padding: 60px 8% 100px;
-            background: rgba(15, 20, 30, 0.5);
+            padding: 70px 8% 110px;
+            background: linear-gradient(180deg, rgba(10, 13, 20, 0.8) 0%, rgba(18, 24, 38, 0.9) 100%);
             text-align: center;
         }
 
         .download-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 32px;
+            margin-top: 45px;
         }
 
         .dl-card {
             background: rgba(22, 27, 38, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 35px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 40px 28px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            backdrop-filter: blur(16px);
+            transition: all 0.4s ease;
         }
 
         .dl-card.highlight {
             border-color: var(--primary);
-            box-shadow: 0 10px 30px rgba(230, 36, 41, 0.2);
+            box-shadow: 0 12px 40px rgba(230, 36, 41, 0.3);
+            background: radial-gradient(circle at top right, rgba(230, 36, 41, 0.15), rgba(22, 27, 38, 0.9));
+        }
+
+        .dl-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba(0, 210, 255, 0.25);
+            border-color: var(--secondary);
         }
 
         .dl-badge {
             position: absolute;
-            top: 16px;
-            right: -32px;
+            top: 20px;
+            right: -36px;
             background: var(--primary);
             color: #FFF;
             font-size: 0.75rem;
-            font-weight: 700;
-            padding: 4px 35px;
+            font-weight: 800;
+            padding: 5px 40px;
             transform: rotate(45deg);
             text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
         }
 
         .dl-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 3.2rem;
+            margin-bottom: 22px;
             color: var(--secondary);
+            transition: transform 0.3s;
+        }
+
+        .dl-card:hover .dl-icon {
+            transform: scale(1.1);
         }
 
         .dl-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 8px;
+            font-size: 1.45rem;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .dl-card p {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 24px;
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+            line-height: 1.5;
         }
 
         /* Footer */
         footer {
-            padding: 40px 8%;
+            padding: 45px 8%;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
             text-align: center;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            background: #080A10;
         }
 
         footer a {
             color: var(--primary);
             text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Keyframes */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInZoom {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         @media (max-width: 900px) {
             .hero {
                 grid-template-columns: 1fr;
-                padding-top: 130px;
+                padding-top: 140px;
                 text-align: center;
             }
             .hero-content p {
-                margin: 0 auto 30px;
+                margin: 0 auto 35px;
             }
             .hero-buttons {
                 justify-content: center;
+            }
+            .swinging-spidey {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
+
+    <!-- Interactive Animated Background Canvas -->
+    <canvas id="webCanvas"></canvas>
 
     <header>
         <a href="#" class="logo-box">
@@ -426,6 +605,12 @@
     <main>
         <!-- Hero Section -->
         <section class="hero">
+            <!-- Hanging Swinging Spider-Man Mascot -->
+            <div class="swinging-spidey">
+                <div class="swinging-thread"></div>
+                <img src="assets/spiderman.png" alt="Swinging Spidey" class="swinging-img">
+            </div>
+
             <div class="hero-content">
                 <h1>Never Miss A Task. <span>Spider-Man Drops In</span> To Remind You.</h1>
                 <p>A sleek, lightweight desktop & mobile overlay app that swings down on top of any active window when your reminder is due. Built for power users and gamers.</p>
@@ -449,7 +634,7 @@
             <p class="section-subtitle">Click the button below to test how Spider-Man swings down on your screen!</p>
 
             <div class="demo-stage">
-                <button id="triggerDemoBtn" class="btn-primary" style="z-index: 20;">
+                <button id="triggerDemoBtn" class="btn-primary" style="z-index: 30;">
                     <i class="fa-solid fa-spider"></i> TEST DROP OVERLAY NOW
                 </button>
 
@@ -457,8 +642,8 @@
                     <div class="web-line"></div>
                     <img src="assets/spiderman.png" alt="Spider-Man" class="spider-img">
                     <div class="speech-bubble">
-                        <h4 style="color: #FF4D4D; margin-bottom: 4px;">🕷️ SPYDY REMINDER</h4>
-                        <p style="font-size: 0.95rem; color: #FFF;" id="reminderText">Time to drink water and stretch!</p>
+                        <h4 style="color: #FF4D4D; margin-bottom: 6px; font-family: 'Space Grotesk', sans-serif;">🕷️ SPYDY REMINDER</h4>
+                        <p style="font-size: 1rem; color: #FFF; line-height: 1.4;" id="reminderText">Time to drink water and stretch!</p>
                     </div>
                 </div>
             </div>
@@ -533,45 +718,140 @@
     </footer>
 
     <script>
+        /* Interactive Background Spider Web Canvas */
+        const canvas = document.getElementById('webCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const nodes = [];
+        const nodeCount = Math.floor((width * height) / 25000);
+        let mouse = { x: null, y: null, radius: 180 };
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.radius = Math.random() * 2 + 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#E62429';
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#E62429';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < nodeCount; i++) nodes.push(new Node());
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].update();
+                nodes[i].draw();
+
+                // Draw connecting web threads
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.strokeStyle = `rgba(230, 36, 41, ${1 - dist / 130})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+
+                // Connect to Mouse Pointer Web
+                if (mouse.x && mouse.y) {
+                    const dx = nodes[i].x - mouse.x;
+                    const dy = nodes[i].y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.strokeStyle = `rgba(0, 210, 255, ${0.8 * (1 - dist / mouse.radius)})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        /* Interactive Web Sound Synthesis */
+        let audioCtx;
+        function playWebWhipSound() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Frequency sweep for web whip
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.25);
+
+                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } catch(e){}
+        }
+
+        /* Demo Trigger Logic */
         const triggerBtn = document.getElementById('triggerDemoBtn');
         const overlay = document.getElementById('spiderOverlay');
         const reminderText = document.getElementById('reminderText');
 
         const reminders = [
             "Time to drink water and stretch! 💧",
-            "Take a 5-minute eye break! 👀",
-            "Check your project deadline! 🚀",
-            "Stand up and stretch your back! 🤸‍♂️"
+            "Take a 5-minute eye break from screen! 👀",
+            "Check your urgent project deadline! 🚀",
+            "Stand up and do a quick stretch! 🤸‍♂️",
+            "Don't forget to take a walk! 🚶‍♂️"
         ];
-
-        let audioCtx;
-        function playWebSound() {
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.2);
-            } catch(e){}
-        }
 
         triggerBtn.addEventListener('click', () => {
             const randomReminder = reminders[Math.floor(Math.random() * reminders.length)];
             reminderText.textContent = randomReminder;
-            playWebSound();
+            playWebWhipSound();
 
             overlay.classList.add('active');
 
             setTimeout(() => {
                 overlay.classList.remove('active');
-            }, 3500);
+            }, 3800);
         });
     </script>
 </body>
