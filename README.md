@@ -37,8 +37,6 @@ npm run dist
 This uses `electron-builder` and produces:
 - `dist\Spydy Reminder Setup <version>.exe` — a proper installer (adds Start
   Menu + Desktop shortcuts)
-- `dist\Spydy Reminder <version>.exe` — a portable single-file version, no
-  install needed
 
 (`npm run pack` builds an unpacked folder instead, useful for quick testing.)
 
