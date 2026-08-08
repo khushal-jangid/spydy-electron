@@ -1,64 +1,46 @@
-# Spydy Reminder — Windows Desktop App (Electron)
+# Spydy Reminder — Android & Desktop App 🕷️
 
-This is a web-tech rebuild of the original Python/Tkinter Spydy Reminder. It's an
-**Electron app**, not a browser page — that's the only way to get a real overlay
-that drops down on top of *all* your windows (browsers can't do that on their own).
+Spydy Reminder is a Spider-Man themed reminder app featuring full-screen overlay drop animation, custom alerts, sender details, and active reminder tracking across Android & Windows Desktop.
+
+---
+
+## 📱 Android App (.apk) — Native Android Edition
+
+Native Android application with **Display over other apps (Overlay)** permission support, high-priority notifications, audio alerts, and persistence.
+
+### 📥 Download Android APK:
+👉 **[Download SpydyReminder.apk](./release/SpydyReminder.apk)**
+
+### 🌟 Key Features:
+- 🕷️ **Spider-Man Overlay Drop**: Full-screen overlay alert on top of all Android apps.
+- 👤 **Sender Name ("Kiska reminder hai")**: Set custom sender/caller names (e.g. Mom, Boss, Friend).
+- 💬 **Reminder Details ("Kya set kiya tha")**: Display message, set time, and countdown.
+- 📋 **Active Reminders List**: View all active scheduled reminders directly in the app with one-click Cancel buttons.
+- 🔊 **Audio & Vibration Alerts**: Dual `MediaPlayer` + `RingtoneManager` fallback with physical vibration.
+- 🔄 **Reboot Auto-Restore**: `ReminderStore` automatically restores all active alarms upon phone reboot.
+
+---
+
+## 💻 Windows Desktop App (Electron)
 
 What you get:
-- A control panel window (same dark theme, presets, quick timers, custom delay)
-- A transparent, always-on-top, click-through-when-hidden overlay window that
-  plays the drop animation and shows the reminder speech bubble
-- A tray icon (closing the control panel minimizes it to the tray — reminders
-  keep running in the background)
-- Reminders persist across restarts (saved to a local JSON file)
-- Web-shoot / dismiss sound effects re-created with the Web Audio API (no
-  `winsound` dependency, so this also runs on macOS/Linux for development)
+- A control panel window (dark theme, quick presets, custom delay)
+- A transparent, always-on-top overlay window with Spider-Man drop animation
+- System tray minimization and background scheduling
+- Web Audio API sound effects
 
-## Requirements
-
-- [Node.js](https://nodejs.org) 18+ (includes npm) installed on the Windows machine
-
-## Run it in development mode
-
-```
+### 🚀 Running Desktop App
+```bash
 npm install
 npm start
 ```
 
-Or just double-click `start_dev.bat` on Windows — it does both steps for you.
+---
 
-## Build a real Windows installer / .exe
+## 🛠️ Android Build Instructions
 
+```bash
+cd android
+./gradlew assembleDebug
 ```
-npm install
-npm run dist
-```
-
-This uses `electron-builder` and produces:
-- `dist\Spydy Reminder Setup <version>.exe` — a proper installer (adds Start
-  Menu + Desktop shortcuts)
-
-(`npm run pack` builds an unpacked folder instead, useful for quick testing.)
-
-## Project layout
-
-```
-main.js              Electron main process: windows, tray, reminder scheduling
-preload.js            Safe IPC bridge exposed to the renderer as window.spydy
-src/
-  control-panel.html/css/js   The main window UI
-  overlay.html/css/js         The fullscreen transparent drop overlay
-  audio.js                    Web Audio re-creation of the original beep sounds
-assets/
-  logo.png             App / tray icon
-  spiderman.png         Character art used in the drop animation
-```
-
-## Notes
-
-- The overlay only intercepts clicks while a reminder is actively showing —
-  the rest of the time it's hidden, so it never blocks your other apps.
-- Multi-monitor: the overlay currently drops on your **primary** display,
-  same as the original.
-- If Windows SmartScreen flags the unsigned .exe on first run, that's normal
-  for an app that isn't code-signed — click "More info" → "Run anyway".
+The compiled APK will be generated at `android/app/build/outputs/apk/debug/app-debug.apk`.
