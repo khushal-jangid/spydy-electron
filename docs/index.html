@@ -947,26 +947,34 @@
         }
         animateCanvas();
 
-        /* Interactive Web Sound Synthesis */
+        /* Interactive Web Sound Synthesis (Mobile & Desktop Compatible) */
         let audioCtx;
         function playWebWhipSound() {
             try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (!audioCtx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContextClass) audioCtx = new AudioContextClass();
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
                 
-                // Frequency sweep for web whip
+                if (!audioCtx) return;
+
+                const now = audioCtx.currentTime;
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.25);
+                osc.frequency.setValueAtTime(1400, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.3);
 
-                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.5, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
 
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.3);
             } catch(e){}
         }
 
@@ -983,7 +991,8 @@
             "Don't forget to take a walk! 🚶‍♂️"
         ];
 
-        triggerBtn.addEventListener('click', () => {
+        function handleDemoTrigger(e) {
+            if (e) e.preventDefault();
             const randomReminder = reminders[Math.floor(Math.random() * reminders.length)];
             reminderText.textContent = randomReminder;
             playWebWhipSound();
@@ -993,7 +1002,12 @@
             setTimeout(() => {
                 overlay.classList.remove('active');
             }, 3800);
-        });
+        }
+
+        if (triggerBtn) {
+            triggerBtn.addEventListener('click', handleDemoTrigger);
+            triggerBtn.addEventListener('touchstart', handleDemoTrigger, { passive: false });
+        }
 
         /* Mobile Menu Navigation Toggle */
         const mobileToggle = document.getElementById('mobileToggle');
