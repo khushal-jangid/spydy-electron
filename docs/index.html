@@ -565,20 +565,168 @@
             }
         }
 
+        /* Mobile Toggle Icon */
+        .mobile-toggle {
+            display: none;
+            background: rgba(230, 36, 41, 0.15);
+            border: 1px solid var(--primary);
+            color: white;
+            font-size: 1.3rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-toggle:active {
+            transform: scale(0.92);
+        }
+
+        /* Responsive Breakpoints for Mobile & Tablet */
         @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                padding-top: 140px;
+            header {
+                padding: 14px 6%;
+            }
+            .mobile-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            nav {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 13, 20, 0.96);
+                backdrop-filter: blur(24px);
+                border-bottom: 1px solid rgba(230, 36, 41, 0.3);
+                padding: 24px 0;
+                transform: translateY(-150%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            }
+            nav.open {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+            nav ul {
+                flex-direction: column;
+                gap: 20px;
                 text-align: center;
             }
+            nav a {
+                font-size: 1.15rem;
+                padding: 8px 16px;
+                display: inline-block;
+            }
+            .nav-btn {
+                display: inline-block;
+                width: 80%;
+                max-width: 280px;
+                margin-top: 6px;
+            }
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 130px 6% 50px;
+                text-align: center;
+                gap: 32px;
+            }
+            .hero-content h1 {
+                font-size: clamp(2.1rem, 7.5vw, 3.2rem);
+                margin-bottom: 16px;
+            }
             .hero-content p {
-                margin: 0 auto 35px;
+                font-size: 1.05rem;
+                margin: 0 auto 28px;
             }
             .hero-buttons {
                 justify-content: center;
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+                max-width: 380px;
+                margin: 0 auto;
+            }
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 24px;
+                font-size: 1.05rem;
             }
             .swinging-spidey {
                 display: none;
+            }
+            .demo-section {
+                padding: 50px 4%;
+            }
+            .demo-stage {
+                height: 380px;
+                border-radius: 18px;
+            }
+            .spider-overlay {
+                top: -340px;
+            }
+            .spider-overlay.active {
+                top: 15px;
+            }
+            .spider-img {
+                width: 110px;
+            }
+            .speech-bubble {
+                padding: 14px 20px;
+                max-width: 290px;
+                margin-top: 8px;
+            }
+            .speech-bubble h4 {
+                font-size: 0.95rem;
+            }
+            .speech-bubble p {
+                font-size: 0.9rem !important;
+            }
+            .features-grid {
+                padding: 30px 6% 60px;
+                gap: 20px;
+            }
+            .feature-card {
+                padding: 26px 22px;
+            }
+            .download-section {
+                padding: 50px 6% 80px;
+            }
+            .download-cards {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                max-width: 450px;
+                margin: 35px auto 0;
+            }
+            .dl-card {
+                padding: 32px 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-box span {
+                font-size: 1.15rem;
+            }
+            .logo-box img {
+                width: 34px;
+                height: 34px;
+            }
+            .hero-content h1 {
+                font-size: 1.95rem;
+            }
+            .demo-stage {
+                height: 340px;
+            }
+            .spider-img {
+                width: 95px;
+            }
+            .web-line {
+                height: 110px;
             }
         }
     </style>
@@ -593,7 +741,10 @@
             <img src="assets/logo.png" alt="Spydy Logo">
             <span>SPYDY REMINDER</span>
         </a>
-        <nav>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <nav id="navMenu">
             <ul>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#demo">Live Demo</a></li>
@@ -843,6 +994,33 @@
                 overlay.classList.remove('active');
             }, 3800);
         });
+
+        /* Mobile Menu Navigation Toggle */
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = navMenu.querySelectorAll('a');
+
+        if (mobileToggle && navMenu) {
+            mobileToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('open');
+                const icon = mobileToggle.querySelector('i');
+                if (icon) {
+                    if (navMenu.classList.contains('open')) {
+                        icon.className = 'fa-solid fa-xmark';
+                    } else {
+                        icon.className = 'fa-solid fa-bars';
+                    }
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('open');
+                    const icon = mobileToggle.querySelector('i');
+                    if (icon) icon.className = 'fa-solid fa-bars';
+                });
+            });
+        }
     </script>
 </body>
 </html>
