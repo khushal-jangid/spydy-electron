@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spydy Reminder — Desktop & Mobile Overlay Reminders</title>
+    <meta name="description" content="A sleek, lightweight Spider-Man overlay app for Windows & Android that drops reminders right on top of your screen.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #E62429;
+            --primary-glow: rgba(230, 36, 41, 0.4);
+            --secondary: #00D2FF;
+            --bg-dark: #0A0D14;
+            --card-bg: rgba(22, 27, 38, 0.7);
+            --card-border: rgba(230, 36, 41, 0.25);
+            --text-main: #F0F4F8;
+            --text-muted: #94A3B8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(230, 36, 41, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 210, 255, 0.1) 0%, transparent 40%);
+            min-height: 100vh;
+        }
+
+        /* Header & Nav */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            backdrop-filter: blur(12px);
+            background: rgba(10, 13, 20, 0.8);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-box img {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 0 8px var(--primary-glow));
+        }
+
+        .logo-box span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFF, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 28px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--primary), #B31217);
+            color: white !important;
+            padding: 10px 22px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 36, 41, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 160px 8% 80px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.4rem;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-content h1 span {
+            background: linear-gradient(135deg, #FF4D4D, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            line-height: 1.6;
+            max-width: 540px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary), #990B0F);
+            color: #FFF;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 8px 25px var(--primary-glow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(230, 36, 41, 0.6);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .hero-image-container {
+            position: relative;
+        }
+
+        .hero-image {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(230, 36, 41, 0.2);
+            transition: transform 0.4s ease;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Live Interactive Web Demo */
+        .demo-section {
+            padding: 80px 8%;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-size: 1.05rem;
+        }
+
+        .demo-stage {
+            position: relative;
+            max-width: 900px;
+            height: 420px;
+            margin: 0 auto;
+            background: #10141E;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .spider-overlay {
+            position: absolute;
+            top: -300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+        }
+
+        .spider-overlay.active {
+            top: 20px;
+        }
+
+        .web-line {
+            width: 3px;
+            height: 140px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.2), #FFFFFF);
+            box-shadow: 0 0 8px #FFF;
+        }
+
+        .spider-img {
+            width: 130px;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.7));
+        }
+
+        .speech-bubble {
+            background: rgba(22, 27, 38, 0.95);
+            border: 2px solid var(--primary);
+            padding: 16px 24px;
+            border-radius: 16px;
+            margin-top: 10px;
+            box-shadow: 0 10px 30px rgba(230, 36, 41, 0.3);
+            max-width: 320px;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 10px 25px rgba(230, 36, 41, 0.2); }
+            to { box-shadow: 0 10px 35px rgba(230, 36, 41, 0.5); }
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 40px 8% 80px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 30px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Downloads Grid */
+        .download-section {
+            padding: 60px 8% 100px;
+            background: rgba(15, 20, 30, 0.5);
+            text-align: center;
+        }
+
+        .download-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .dl-card {
+            background: rgba(22, 27, 38, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .dl-card.highlight {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(230, 36, 41, 0.2);
+        }
+
+        .dl-badge {
+            position: absolute;
+            top: 16px;
+            right: -32px;
+            background: var(--primary);
+            color: #FFF;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 35px;
+            transform: rotate(45deg);
+            text-transform: uppercase;
+        }
+
+        .dl-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .dl-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .dl-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 8%;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 130px;
+                text-align: center;
+            }
+            .hero-content p {
+                margin: 0 auto 30px;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo-box">
+            <img src="assets/logo.png" alt="Spydy Logo">
+            <span>SPYDY REMINDER</span>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Live Demo</a></li>
+                <li><a href="#downloads" class="nav-btn"><i class="fa-solid fa-download"></i> Download</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Never Miss A Task. <span>Spider-Man Drops In</span> To Remind You.</h1>
+                <p>A sleek, lightweight desktop & mobile overlay app that swings down on top of any active window when your reminder is due. Built for power users and gamers.</p>
+                <div class="hero-buttons">
+                    <a href="#downloads" class="btn-primary">
+                        <i class="fa-brands fa-windows"></i> Download Windows (.exe)
+                    </a>
+                    <a href="https://github.com/khushal-jangid/spydy-electron" target="_blank" class="btn-secondary">
+                        <i class="fa-brands fa-github"></i> GitHub Source
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image-container">
+                <img src="assets/showcase.jpg" alt="Spydy Reminder App Showcase" class="hero-image">
+            </div>
+        </section>
+
+        <!-- Live Interactive Web Demo -->
+        <section id="demo" class="demo-section">
+            <h2 class="section-title">Experience The Overlay Drop</h2>
+            <p class="section-subtitle">Click the button below to test how Spider-Man swings down on your screen!</p>
+
+            <div class="demo-stage">
+                <button id="triggerDemoBtn" class="btn-primary" style="z-index: 20;">
+                    <i class="fa-solid fa-spider"></i> TEST DROP OVERLAY NOW
+                </button>
+
+                <div class="spider-overlay" id="spiderOverlay">
+                    <div class="web-line"></div>
+                    <img src="assets/spiderman.png" alt="Spider-Man" class="spider-img">
+                    <div class="speech-bubble">
+                        <h4 style="color: #FF4D4D; margin-bottom: 4px;">🕷️ SPYDY REMINDER</h4>
+                        <p style="font-size: 0.95rem; color: #FFF;" id="reminderText">Time to drink water and stretch!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section id="features" class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>Always-On-Top Overlay</h3>
+                <p>Drops on top of full-screen games, browser tabs, IDEs & video calls without interrupting your focus.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Zero Interruption</h3>
+                <p>Click-through and invisible when inactive. Automatically hides when dismissed.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-volume-high"></i></div>
+                <h3>Web-Shoot Sound Effects</h3>
+                <p>Authentic web-slinging sound audio built natively via Web Audio API.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-clock"></i></div>
+                <h3>Quick Presets & Timers</h3>
+                <p>Instant 5m, 10m, 15m, 30m preset buttons plus custom minute delay inputs.</p>
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section id="downloads" class="download-section">
+            <h2 class="section-title">Download Spydy Reminder</h2>
+            <p class="section-subtitle">Available for Windows Desktop and Android Mobile devices.</p>
+
+            <div class="download-cards">
+                <!-- Portable EXE -->
+                <div class="dl-card highlight">
+                    <div class="dl-badge">POPULAR</div>
+                    <div class="dl-icon"><i class="fa-brands fa-windows"></i></div>
+                    <h3>Windows Portable (.exe)</h3>
+                    <p>Single standalone .exe file. No installation required — double-click and run!</p>
+                    <a href="https://github.com/khushal-jangid/spydy-electron/raw/main/dist/Spydy%20Reminder%201.0.0.exe" class="btn-primary" download>
+                        <i class="fa-solid fa-download"></i> Download Portable (79 MB)
+                    </a>
+                </div>
+
+                <!-- Windows Setup Installer -->
+                <div class="dl-card">
+                    <div class="dl-icon"><i class="fa-solid fa-box-archive"></i></div>
+                    <h3>Windows Setup (.exe)</h3>
+                    <p>Full installer with Desktop shortcuts and Start Menu integration.</p>
+                    <a href="https://github.com/khushal-jangid/spydy-electron/raw/main/dist/Spydy%20Reminder%20Setup%201.0.0.exe" class="btn-secondary" download style="border-color: var(--primary);">
+                        <i class="fa-solid fa-download"></i> Download Installer (79 MB)
+                    </a>
+                </div>
+
+                <!-- Android APK -->
+                <div class="dl-card">
+                    <div class="dl-icon"><i class="fa-brands fa-android"></i></div>
+                    <h3>Android App (.apk)</h3>
+                    <p>Native Android app with display over other apps permission.</p>
+                    <a href="https://github.com/khushal-jangid/spydy-windows/raw/main/app-debug.apk" class="btn-secondary" download>
+                        <i class="fa-solid fa-download"></i> Download APK (6.7 MB)
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Spydy Reminder. Built with ❤️ for productivity. <a href="https://github.com/khushal-jangid/spydy-electron" target="_blank"><i class="fa-brands fa-github"></i> GitHub Repository</a></p>
+    </footer>
+
+    <script>
+        const triggerBtn = document.getElementById('triggerDemoBtn');
+        const overlay = document.getElementById('spiderOverlay');
+        const reminderText = document.getElementById('reminderText');
+
+        const reminders = [
+            "Time to drink water and stretch! 💧",
+            "Take a 5-minute eye break! 👀",
+            "Check your project deadline! 🚀",
+            "Stand up and stretch your back! 🤸‍♂️"
+        ];
+
+        let audioCtx;
+        function playWebSound() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
+            } catch(e){}
+        }
+
+        triggerBtn.addEventListener('click', () => {
+            const randomReminder = reminders[Math.floor(Math.random() * reminders.length)];
+            reminderText.textContent = randomReminder;
+            playWebSound();
+
+            overlay.classList.add('active');
+
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 3500);
+        });
+    </script>
+</body>
+</html>
